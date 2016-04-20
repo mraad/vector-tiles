@@ -41,7 +41,7 @@ class VectorTileEncoderTest extends FlatSpec with Matchers {
     layers.length shouldBe 1
     val layer = layers.head
     layer.`name` shouldBe "cities"
-    layer.`version` shouldBe 2
+    layer.`version` shouldBe 1
     layer.`extent` shouldBe Some(4096)
 
     layer.`keys` should contain allOf("id", "name")
@@ -93,7 +93,7 @@ class VectorTileEncoderTest extends FlatSpec with Matchers {
     layers.length shouldBe 1
     val layer = layers(0)
     layer.`name` shouldBe "water"
-    layer.`version` shouldBe 2
+    layer.`version` shouldBe 1
     layer.`extent` shouldBe Some(4096)
     val features = layer.`features`
     features.length shouldBe 1

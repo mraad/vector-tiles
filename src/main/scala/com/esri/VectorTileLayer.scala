@@ -39,7 +39,7 @@ final case class VectorTileLayer(name: String) {
 
   def toLayer(extent: Int) = {
     Layer(
-      `version` = 2,
+      `version` = 1,
       `name` = name,
       `keys` = keys(),
       `values` = values(),
