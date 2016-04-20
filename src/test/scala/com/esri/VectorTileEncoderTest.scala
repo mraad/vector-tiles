@@ -1,6 +1,6 @@
 package com.esri
 
-import com.esri.core.geometry.{Envelope2D, Point, Polygon}
+import com.esri.core.geometry.{Envelope2D, Point, Polygon, Polyline}
 import org.scalatest._
 import vector_tile.Tile
 import vector_tile.Tile.GeomType
@@ -31,11 +31,30 @@ class VectorTileEncoderTest extends FlatSpec with Matchers {
     }
   */
 
-  it should "throw EmptyLayersException if no layers were added to the tile" in {
-    a[EmptyLayersException] should be thrownBy {
-      VectorTileEncoder(new Envelope2D(-180, -90, 180, 90))
-        .encode()
+  /*
+    it should "throw EmptyLayersException if no layers were added to the tile" in {
+      a[EmptyLayersException] should be thrownBy {
+        VectorTileEncoder(new Envelope2D(-180, -90, 180, 90))
+          .encode()
+      }
     }
+  */
+
+  it should "have no layers if point is outside the extent" in {
+    VectorTileEncoder(new Envelope2D(-180, -90, 180, 90))
+      .addFeature("points", new Point(-1000, -1000), Map.empty)
+      .hasLayers() shouldBe false
+  }
+
+  it should "have no layers if a line does not moveTo" in {
+
+    val geom = new Polyline()
+    geom.startPath(-10, -10)
+    geom.lineTo(-10, -10)
+
+    VectorTileEncoder(new Envelope2D(-180, -90, 180, 90))
+      .addFeature("lines", geom, Map.empty)
+      .hasLayers() shouldBe false
   }
 
   it should "throw IllegalExtentException if extent is less than 1" in {
