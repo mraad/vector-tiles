@@ -103,7 +103,14 @@ final case class VectorTileEncoder(envp: Envelope2D, clip: Envelope2D, extent: I
     arrBuf.nonEmpty
   }
 
+  def checkForEmptyLayerName(layerName: String): Unit = {
+    if (layerName.isEmpty) {
+      throw new IllegalArgumentException("Supplied layer name is empty.")
+    }
+  }
+
   def addPoint(layerName: String, point: Point, attr: Map[String, Any]) = {
+    checkForEmptyLayerName(layerName)
     if (clip.contains(point)) {
       val layer = layers.getOrElseUpdate(layerName, VectorTileLayer(layerName))
       val tags = attr.flatMap { case (k, v) => Seq(layer.getKeyTag(k), layer.getValTag(v)) }.toVector
@@ -124,6 +131,7 @@ final case class VectorTileEncoder(envp: Envelope2D, clip: Envelope2D, extent: I
   }
 
   def addLine(layerName: String, line: MultiPath, attr: Map[String, Any]) = {
+    checkForEmptyLayerName(layerName)
     val clipped = operator.execute(line, clip, null, null).asInstanceOf[MultiPath]
     if (!clipped.isEmpty) {
       if (addMultiPath(clipped, toPathEndNoop, closeLine)) {
@@ -139,6 +147,7 @@ final case class VectorTileEncoder(envp: Envelope2D, clip: Envelope2D, extent: I
   }
 
   def addFill(layerName: String, fill: MultiPath, attr: Map[String, Any]) = {
+    checkForEmptyLayerName(layerName)
     val clipped = operator.execute(fill, clip, null, null).asInstanceOf[MultiPath]
     if (!clipped.isEmpty) {
       if (addMultiPath(clipped, toPathEndPoly, closeFill)) {

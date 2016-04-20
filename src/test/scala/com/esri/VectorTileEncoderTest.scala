@@ -31,6 +31,14 @@ class VectorTileEncoderTest extends FlatSpec with Matchers {
     }
   */
 
+  it should "throw IllegalArgumentException if an empty layer name is passed" in {
+    a[IllegalArgumentException] should be thrownBy {
+      VectorTileEncoder(new Envelope2D(-180, -90, 180, 90))
+        .addFeature("", new Point(35.4955, 33.8886), Map("id" -> 3533, "name" -> "Beirut"))
+        .encode()
+    }
+  }
+
   it should "test for Beirut" in {
     val bytes = VectorTileEncoder(new Envelope2D(-180, -90, 180, 90))
       .addFeature("cities", new Point(35.4955, 33.8886), Map("id" -> 3533, "name" -> "Beirut"))
