@@ -31,6 +31,21 @@ class VectorTileEncoderTest extends FlatSpec with Matchers {
     }
   */
 
+  it should "throw EmptyLayersException if no layers were added to the tile" in {
+    a[EmptyLayersException] should be thrownBy {
+      VectorTileEncoder(new Envelope2D(-180, -90, 180, 90))
+        .encode()
+    }
+  }
+
+  it should "throw IllegalExtentException if extent is less than 1" in {
+    a[IllegalExtentException] should be thrownBy {
+      val envp = new Envelope2D(-180, -90, 180, 90)
+      VectorTileEncoder(envp, envp, 0)
+        .encode()
+    }
+  }
+
   it should "throw IllegalArgumentException if an empty layer name is passed" in {
     a[IllegalArgumentException] should be thrownBy {
       VectorTileEncoder(new Envelope2D(-180, -90, 180, 90))

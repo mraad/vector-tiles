@@ -175,6 +175,8 @@ final case class VectorTileEncoder(envp: Envelope2D, clip: Envelope2D, extent: I
   }
 
   def toTile() = {
+    if (extent < 1) throw IllegalExtentException(s"Supplied extent ($extent) should be greater than 0")
+    if (layers.isEmpty) throw EmptyLayersException()
     Tile(`layers` = layers.values.map(_.toLayer(extent)).toVector)
   }
 
